@@ -5,13 +5,15 @@ defmodule CryptoCompare.Util.ApiMini do
 
   @host "https://min-api.cryptocompare.com/data/"
   @timeout Application.get_env(:crypto_compare, :request_timeout, 8000)
+  @recv_timeout Application.get_env(:crypto_compare, :recv_timeout, 8000)
+
 
   def host, do: @host
   def process_url(url), do: @host <> url
 
-  defp process_request_options([]), do: [timeout: @timeout]
+  defp process_request_options([]), do: [timeout: @timeout, recv_timeout: @recv_timeout]
   defp process_request_options([timeout: _t] = opts), do: opts
-  defp process_request_options(opts), do: Keyword.merge(opts, [timeout: @timeout])
+  defp process_request_options(opts), do: Keyword.merge(opts, [timeout: @timeout, recv_timeout: @recv_timeout])
 
   defp process_request_body(req) when is_binary(req), do: req
   defp process_request_body(req), do: Poison.encode!(req)
